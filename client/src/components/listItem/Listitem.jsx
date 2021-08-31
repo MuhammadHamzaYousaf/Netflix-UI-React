@@ -1,23 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import "./Listitem.scss";
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import AddIcon from '@material-ui/icons/Add';
 import ThumbUpAltOutlinedIcon from '@material-ui/icons/ThumbUpAltOutlined';
 import ThumbDownAltOutlinedIcon from '@material-ui/icons/ThumbDownAltOutlined';
-const Listitem = ({index}) => {
+import axios from 'axios';
+import {Link} from 'react-router-dom';
+const Listitem = ({item,index}) => {
+    
     const [isHover,setIsHover]=useState(false);
-    const trailer="https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c0fd273d2c6d9a064f3ae35579b2bbdf&profile_id=139&oauth2_token_id=57447761";
+    const [movie,setMovie]=useState({});
+    useEffect(() => {
+        const getMovie=async ()=>{
+            try {
+                const res=await axios.get('movies/find/'+item,{
+                    headers:{
+                        token:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTJiY2QyYWQ5ZDBlMWQ3YjhkYWQ0NGUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjMwMzQ2NTQyLCJleHAiOjE2MzA3Nzg1NDJ9.4tq75Uc_lltu-TiZBc0e2-_E45W-RJWcPRWlC0Ei1fM"
+                    }
+                });  
+                
+                setMovie(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getMovie();
+    }, [item])    
+    
     return (
+        <Link to={{pathname:"/watch", movie:movie}}>
         <div className="listitem" 
             style={{left: isHover && index*225-50+index*2.5}}
             onMouseEnter={()=>setIsHover(true)}
             onMouseDown={()=>{setIsHover(false)}}
         > 
-            <img src="https://occ-0-1723-92.1.nflxso.net/dnm/api/v6/X194eJsgWBDE2aQbaNdmCXGUP-Y/AAAABU7D36jL6KiLG1xI8Xg_cZK-hYQj1L8yRxbQuB0rcLCnAk8AhEK5EM83QI71bRHUm0qOYxonD88gaThgDaPu7NuUfRg.jpg?r=4ee"
+            <img src={movie.img}
              alt="" />
              {isHover && (
             <>
-            <video src={trailer} autoPlay={true} loop/>
+            <video src={movie.trailer} autoPlay={true} loop/>
              <div className="iteminfo">
                <div className="icons">
                     <PlayArrowIcon className="icon"/>
@@ -26,20 +47,20 @@ const Listitem = ({index}) => {
                     <ThumbDownAltOutlinedIcon className="icon"/>
                 </div>
                 <div className="iteminfoTop">
-                    <span>1 hour 14 mins</span>                
-                    <span class="limit">+16</span>
-                    <span>1999</span>
+                    <span>{movie.duration}</span>                
+                    <span class="limit">+{movie.limit}</span>
+                    <span>{movie.year}</span>
                 </div>  
                 <div className="desc">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores, sint doloremque.
-                    Numquam eligendi ipsam corrupti magni,inventore laboriosam corporis iure porro.
+                    {movie.desc}
                 </div>
-                <div className="genre">Action</div>
+                <div className="genre">{movie.genre}</div>
              </div>  
             </> 
              )}
              
         </div>
+        </Link>
     )
 }
 

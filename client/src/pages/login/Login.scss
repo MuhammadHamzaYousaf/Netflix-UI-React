@@ -72,6 +72,13 @@
           color: lightgray;
           b {
             color: white;
+            a{
+              text-decoration: none;
+              color: white;
+              &:hover{
+                color: red;
+              }
+            }
           }
         }
       }

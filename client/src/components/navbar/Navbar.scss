@@ -31,9 +31,14 @@
                 margin-right: 20px;
                 cursor: pointer;
                 font-size: 14px;
-                &:hover{
-                    color: chartreuse;   
+                a{
+                    color: white;
+                    text-decoration: none;
+                    &:hover{
+                        color: chartreuse;   
+                    }
                 }
+                
             }
             
         }

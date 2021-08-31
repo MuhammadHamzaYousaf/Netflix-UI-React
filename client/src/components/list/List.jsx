@@ -3,10 +3,13 @@ import "./List.scss";
 import ArrowBackIosOutlinedIcon from '@material-ui/icons/ArrowBackIosOutlined';
 import ArrowForwardIosOutlinedIcon from '@material-ui/icons/ArrowForwardIosOutlined';
 import Listitem from '../listItem/Listitem';
-const List = () => {
+const List = ({list}) => {
     
     const [slideNumber,setSlideNumber]=useState(0);
     const [isMoved,setIsMoved]=useState(false);
+    
+
+        
 
     const listRef = useRef()
     
@@ -22,10 +25,13 @@ const List = () => {
             listRef.current.style.transform = `translateX(${-230 + distance}px)`;
         }
     }
+
+    
     return (
+        
         <div className="list">
             <span className="listtitle">
-                Continue to Watch
+                {list.title}
             </span>
             <div className="wrapper">
                 <ArrowBackIosOutlinedIcon className="siderarrow left"
@@ -33,16 +39,10 @@ const List = () => {
                  style={{display:isMoved ? "" : "none"}}
                  />
                 <div className="container" ref={listRef}>
-                    <Listitem index={0}/>
-                    <Listitem index={1}/>
-                    <Listitem index={2}/>
-                    <Listitem index={3}/>
-                    <Listitem index={4}/>
-                    <Listitem index={5}/>
-                    <Listitem index={6}/>
-                    <Listitem index={7}/>
-                    <Listitem index={8}/>
-                    <Listitem index={9}/>
+                    {list.content.map((item,index)=>(
+                        <Listitem item={item} index={index}/>
+                    ))}
+                    
                     
                 </div>
                 <ArrowForwardIosOutlinedIcon className="siderarrow right" onClick={()=>handleClick("right")}/>
