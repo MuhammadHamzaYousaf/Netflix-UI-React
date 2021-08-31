@@ -1,10 +1,27 @@
-import React from 'react'
+import React,{useEffect,useState} from 'react'
 import "./Featured.scss";
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import axios from 'axios';
 const Featured = ({type})=> {
+    const [featuremovie, setFeatureMovie] = useState({})
+    useEffect(() => {
+      const randomMovie=async ()=>{
+          try{
+            const res=await axios.get(`movies/random?type=${type}`,{
+              headers:{
+                token:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTJiY2QyYWQ5ZDBlMWQ3YjhkYWQ0NGUiLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNjMwMzQ2NTQyLCJleHAiOjE2MzA3Nzg1NDJ9.4tq75Uc_lltu-TiZBc0e2-_E45W-RJWcPRWlC0Ei1fM"
+              }
+            });
+            setFeatureMovie(res.data[0]);
+          }catch(error){
+               console.log(error);          
+          }
+      }
+      randomMovie();
+    }, [type]) 
     
-        return (
+    return (
             <div className="featured">
               {type &&(
                   <div className="category">
@@ -28,7 +45,7 @@ const Featured = ({type})=> {
                   </div>
               )}
               <img
-                src="https://images.pexels.com/photos/6899260/pexels-photo-6899260.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                src={featuremovie.img}
                 alt=""
               />
               <div className="info">
@@ -37,10 +54,7 @@ const Featured = ({type})=> {
                   alt=""
                 />
                 <span className="desc">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae
-                  adipisci repellendus eum quasi illo, velit numquam, maxime tempora
-                  sint deleniti, aliquid qui? Facilis, adipisci! Ratione hic repudiandae
-                  temporibus eum earum?
+                  {featuremovie.desc}
                 </span>
                 <div className="buttons">
                   <button className="play">
